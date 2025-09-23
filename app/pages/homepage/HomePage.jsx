@@ -14,7 +14,6 @@ export async function HomePage() {
     */
 
     const response = await axios.get('http://localhost:3000/api/products');
-    console.log(response.data);
     const products = response.data;
 
 

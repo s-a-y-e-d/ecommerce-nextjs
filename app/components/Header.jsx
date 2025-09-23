@@ -1,15 +1,9 @@
 import Link from 'next/link';
 import './header.css'
 import { useCart } from '@/context/CartContext';
+import CartLink from './CartLink';
 export function Header() {
 
-  const { cart } = useCart();
-
-  let totalQuantity = 0;
-
-  cart.forEach((cartItem) => {
-    totalQuantity += cartItem.quantity
-  })
 
   return (
     <>
@@ -37,11 +31,7 @@ export function Header() {
             <span className="orders-text">Orders</span>
           </Link>
 
-          <Link className="cart-link header-link" href="/checkout">
-            <img className="cart-icon" src="images/icons/cart-icon.png" />
-            <div className="cart-quantity">{totalQuantity}</div>
-            <div className="cart-text">Cart</div>
-          </Link>
+          <CartLink />
 
         </div>
       </div>

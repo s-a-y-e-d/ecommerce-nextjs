@@ -16,8 +16,7 @@ export function Product({ product }) {
   const selectQuantity = (event) => {
     setQuantity(Number(event.target.value));
   };
-  console.log(product.id);
-  console.log(quantity)
+
   const addToCart = async () => {
     await axios.post('http://localhost:3000/api/cart-items', {
       productId: product.id,
