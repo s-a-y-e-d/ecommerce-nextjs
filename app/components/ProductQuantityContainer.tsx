@@ -1,18 +1,32 @@
 "use client"
-import { ChangeEvent } from "react";
+import { useCart } from "@/context/CartContext";
+import axios from "axios";
+import Image from "next/image";
+import { useState } from "react";
+//type Props = {
+//  quantity: number;
+//};
 
-type Props = {
-  quantity: number;
-};
+export default function ProductQuantityContainer({ product }) {
+  //const {lo } = useCart();
+  const { loadCartData } = useCart();
 
-export default function ProductQuantityContainer({ quantity }: Props){
-  
-  const selectQuantity = (event: ChangeEvent<HTMLSelectElement> ) => {
-    console.log(event.target.value);
-    quantity = (Number(event.target.value));
+  const addToCart = async () => {
+    await axios.post('http://localhost:3000/api/cart-items', {
+      productId: product.id,
+      quantity
+    });
+    await loadCartData();
   };
-  return(
-    <div className="product-quantity-container">
+  const [quantity, setQuantity] = useState(1);
+
+  const selectQuantity = (event) => {
+    setQuantity(Number(event.target.value));
+  };
+
+  return (
+    <>
+      <div className="product-quantity-container">
         <select value={quantity}
           onChange={selectQuantity}>
           <option value="1">1</option>
@@ -27,5 +41,21 @@ export default function ProductQuantityContainer({ quantity }: Props){
           <option value="10">10</option>
         </select>
       </div>
+      <div className="product-spacer"></div>
+
+      <div className="added-to-cart">
+        <Image src="/images/icons/checkmark.png"
+          height={19}
+          width={16.625}
+          alt='checkmark' />
+        Added
+      </div>
+
+      <button className="add-to-cart-button button-primary"
+        data-testid='add-to-cart-button'
+        onClick={addToCart}>
+        Add to Cart
+      </button>
+    </>
   )
 }
