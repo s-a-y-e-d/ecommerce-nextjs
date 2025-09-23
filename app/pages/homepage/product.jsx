@@ -1,7 +1,7 @@
 import { formateMoney } from '../../utilities/money';
 import Image from 'next/image';
 import AddToCartBtn from '@/app/components/AddToCartBtn';
-import ProductQuantityContainer from '@/app/components/ProductQuantityContainer';
+import InputTaker from '@/app/components/ProductQuantityContainer';
 
 export function Product({ product }) {
 
@@ -38,7 +38,7 @@ export function Product({ product }) {
         {`$${formateMoney(product.priceCents)}`}
       </div>
 
-      <ProductQuantityContainer product={product}/>
+      <InputTaker product={product}/>
 
       
     </div>

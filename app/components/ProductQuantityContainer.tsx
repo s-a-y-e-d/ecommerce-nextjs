@@ -2,13 +2,13 @@
 import { useCart } from "@/context/CartContext";
 import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 //type Props = {
 //  quantity: number;
 //};
 
-export default function ProductQuantityContainer({ product }) {
-  //const {lo } = useCart();
+export default function InputTaker({ product } : {product:{id:number}}) {
+
   const { loadCartData } = useCart();
 
   const addToCart = async () => {
@@ -20,7 +20,7 @@ export default function ProductQuantityContainer({ product }) {
   };
   const [quantity, setQuantity] = useState(1);
 
-  const selectQuantity = (event) => {
+  const selectQuantity = (event: ChangeEvent<HTMLSelectElement>) => {
     setQuantity(Number(event.target.value));
   };
 
