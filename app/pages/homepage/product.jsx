@@ -1,23 +1,31 @@
+"use client"
 import axios from 'axios';
 import { useState } from 'react'
-import { formateMoney } from '../../utilities/money'
+import { formateMoney } from '../../utilities/money';
+import { useCart } from '@/context/CartContext';
+import loadCartData from '@/app/utilities/loadCartData';
+import Image from 'next/image';
+
+export function Product({ product }) {
+
+  const {loadCartData} = useCart();
 
 
-export function Product({ product, loadCartData }) {
   const [quantity, setQuantity] = useState(1);
 
   const selectQuantity = (event) => {
     setQuantity(Number(event.target.value));
   };
-
+  console.log(product.id);
+  console.log(quantity)
   const addToCart = async () => {
-    await axios.post('/api/cart-items', {
+    await axios.post('http://localhost:3000/api/cart-items', {
       productId: product.id,
       quantity
     });
     await loadCartData();
   };
-
+  
   
 
   return (
@@ -25,9 +33,12 @@ export function Product({ product, loadCartData }) {
       data-testid="product-container"
     >
       <div className="product-image-container">
-        <img className="product-image"
+        <Image className="product-image"
           data-testid = "product-image"
-          src={product.image} />
+          src={`/${product.image}`}
+          height={180}
+          width={180}
+          alt='product-image' />
       </div>
 
       <div className="product-name limit-text-to-2-lines">
@@ -35,8 +46,11 @@ export function Product({ product, loadCartData }) {
       </div>
 
       <div className="product-rating-container">
-        <img className="product-rating-stars" data-testid="rating-image"
-          src={`images/ratings/rating-${(product.rating.stars) * 10}.png`} />
+        <Image className="product-rating-stars" data-testid="rating-image"
+          src={`/images/ratings/rating-${(product.rating.stars) * 10}.png`}
+          height={19.78}
+          width={100}
+          alt='rating-image' />
         <div className="product-rating-count link-primary">
           {product.rating.count}
         </div>
@@ -65,7 +79,10 @@ export function Product({ product, loadCartData }) {
       <div className="product-spacer"></div>
 
       <div className="added-to-cart">
-        <img src="images/icons/checkmark.png" />
+        <Image src="/images/icons/checkmark.png" 
+          height={19}
+          width={16.625}
+          alt='checkmark'/>
         Added
       </div>
 

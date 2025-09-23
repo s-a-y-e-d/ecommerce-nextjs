@@ -1,6 +1,10 @@
-import { NavLink } from 'react-router'
+import Link from 'next/link';
 import './header.css'
-export function Header({ cart }) {
+import { useCart } from '@/context/CartContext';
+export function Header() {
+
+  const { cart } = useCart();
+
   let totalQuantity = 0;
 
   cart.forEach((cartItem) => {
@@ -11,12 +15,12 @@ export function Header({ cart }) {
     <>
       <div className="header">
         <div className="left-section">
-          <NavLink to="/" className="header-link">
+          <Link href="/" className="header-link">
             <img className="logo"
               src="images/logo-white.png" />
             <img className="mobile-logo"
               src="images/mobile-logo-white.png" />
-          </NavLink>
+          </Link>
         </div>
 
         <div className="middle-section">
@@ -28,16 +32,17 @@ export function Header({ cart }) {
         </div>
 
         <div className="right-section">
-          <NavLink className="orders-link header-link" to="/orders">
 
+          <Link className="orders-link header-link" href="/orders">
             <span className="orders-text">Orders</span>
-          </NavLink>
+          </Link>
 
-          <NavLink className="cart-link header-link" to="/checkout">
+          <Link className="cart-link header-link" href="/checkout">
             <img className="cart-icon" src="images/icons/cart-icon.png" />
             <div className="cart-quantity">{totalQuantity}</div>
             <div className="cart-text">Cart</div>
-          </NavLink>
+          </Link>
+
         </div>
       </div>
     </>
