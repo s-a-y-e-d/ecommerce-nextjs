@@ -5,11 +5,11 @@ import { useState, useEffect, Fragment } from 'react';
 import { Header } from '../components/Header';
 import { Link } from 'react-router';
 import './OrdersPage.css';
-export function OrdersPage({ cart }) {
+export default function OrdersPage({ cart }) {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/orders?expand=products')
+    axios.get('http://localhost:3000/api/orders?expand=products')
       .then((response) => {
         setOrders(response.data);
       });
@@ -72,7 +72,7 @@ export function OrdersPage({ cart }) {
                         </div>
 
                         <div className="product-actions">
-                          <Link to="/tracking">
+                          <Link href="/tracking">
                             <button className="track-package-button button-secondary">
                               Track package
                             </button>

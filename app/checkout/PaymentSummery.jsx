@@ -1,12 +1,14 @@
-import { Link } from "react-router"
-import { formateMoney } from "../../utilities/money"
-import axios from "axios"
+import Link from 'next/link';
+import formateMoney from "../utiles/money";
+import loadCartData from "../utiles/loadCartData";
+import PlaceOrderBtn from '../components/PlaceOrderbtn';
 
-export function PaymentSummery({ paymentSummery, loadCartData }) {
-  const addToOrders = async () => {
-    await axios.post('/api/orders');
-    await loadCartData();
-  }
+export default async function PaymentSummery({ cart, paymentSummery }) {
+
+  loadCartData(cart);
+
+  
+
   return (
     <>
       <div className="payment-summary">
@@ -39,12 +41,8 @@ export function PaymentSummery({ paymentSummery, loadCartData }) {
           <div className="payment-summary-money">${formateMoney(paymentSummery.totalCostCents)}</div>
         </div>
 
-        <Link to="/orders">
-          <button className="place-order-button button-primary"
-            onClick={addToOrders}
-          >
-            Place your order
-          </button>
+        <Link href="/orders">
+          <PlaceOrderBtn cart={cart} />
         </Link>
 
       </div>

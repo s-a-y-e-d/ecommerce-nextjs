@@ -1,9 +1,8 @@
-import { formateMoney } from '../../utilities/money';
+import formateMoney from '../../utiles/money';
 import Image from 'next/image';
-import AddToCartBtn from '@/app/components/AddToCartBtn';
 import InputTaker from '@/app/components/ProductQuantityContainer';
 
-export function Product({ product }) {
+export default function Product({ product }) {
 
   return (
     <div className="product-container"

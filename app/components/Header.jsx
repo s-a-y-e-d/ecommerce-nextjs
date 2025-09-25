@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import './header.css'
-import { useCart } from '@/context/CartContext';
 import CartLink from './CartLink';
-export function Header() {
+export default function Header() {
 
 
   return (
