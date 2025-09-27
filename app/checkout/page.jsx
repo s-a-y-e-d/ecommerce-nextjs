@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Link from 'next/link'
 import PaymentSummery from './PaymentSummery'
-import OrderSummery from '../components/OrderSummery';
+import OrderSummery from './OrderSummery';
 import './styles/checkout-header.css'
 import './styles/CheckoutPage.css'
 

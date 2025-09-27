@@ -1,10 +1,10 @@
 import axios from "axios";
 import dayjs from 'dayjs';
 import Image from "next/image";
-import DeliveryOption from "../checkout/DeliveryOption";
+import DeliveryOption from "./DeliveryOption";
 import formateMoney from "../utiles/money";
 import loadCartData from "../utiles/loadCartData";
-import DeleteCartItem from "./DeleteCartItem";
+import DeleteCartItem from "../components/DeleteCartItem";
 
 export default async function OrderSummery({ cart }) {
 
