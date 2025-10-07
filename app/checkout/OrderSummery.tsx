@@ -5,8 +5,28 @@ import DeliveryOption from "./DeliveryOption";
 import formateMoney from "../utiles/money";
 import loadCartData from "../utiles/loadCartData";
 import DeleteCartItem from "../components/DeleteCartItem";
+import { Suspense } from "react";
+import { Product } from "../pages/homepage/product";
 
-export default async function OrderSummery({ cart }) {
+export type CartItem = {
+  productId: string,
+  quantity: number,
+  deliveryOptionId: string,
+  product: Product
+};
+
+type CartProps={
+  cart:CartItem[]
+};
+
+export type DeliveryOption = {
+  id: string,
+  priceCents: number,
+  estimatedDeliveryTimeMs: number
+};
+
+
+export default async function OrderSummery({ cart }: CartProps) {
 
   loadCartData(cart);
 
@@ -18,7 +38,7 @@ export default async function OrderSummery({ cart }) {
   return (
     cart.map((cartItem) => {
       const selectedDeliveryOption = deliveryOptions
-        .find((deliveryOption) => {
+        .find((deliveryOption: DeliveryOption) => {
           return ((deliveryOption.id) === (cartItem.deliveryOptionId));
         });
       return (
@@ -56,9 +76,12 @@ export default async function OrderSummery({ cart }) {
               <div className="delivery-options-title">
                 Choose a delivery option:
               </div>
-              {deliveryOptions.map((deliveryOption) => {
+              {deliveryOptions.map((deliveryOption: DeliveryOption) => {
                 return (
-                  <DeliveryOption key={deliveryOption.id} deliveryOption={deliveryOption} cartItem={cartItem} cart={cart} />
+                  <Suspense key={deliveryOption.id} fallback={<div>Loading...</div>}>
+                    <DeliveryOption  deliveryOption={deliveryOption} cartItem={cartItem} cart={cart} />
+                  </Suspense>
+                  
                 );
               })}
             </div>

@@ -3,11 +3,22 @@ import formateMoney from "../utiles/money";
 import loadCartData from "../utiles/loadCartData";
 import PlaceOrderBtn from '../components/PlaceOrderbtn';
 
-export default async function PaymentSummery({ cart, paymentSummery }) {
+type PaymentSummery = {
+  totalItems: number,
+  productCostCents: number
+  shippingCostCents: number
+  totalCostBeforeTaxCents: number
+  taxCents: number
+  totalCostCents: number
+}
+type Props = {
+  cart:[],
+  paymentSummery: PaymentSummery
+}
+
+export default async function PaymentSummery({ cart, paymentSummery }: Props) {
 
   loadCartData(cart);
-
-  
 
   return (
     <>

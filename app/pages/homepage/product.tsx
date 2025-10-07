@@ -1,8 +1,24 @@
 import formateMoney from '../../utiles/money';
 import Image from 'next/image';
-import InputTaker from '@/app/components/ProductQuantityContainer';
+import InputTaker from '@/app/components/InputTaker';
 
-export default function Product({ product }) {
+export type ProductType = {
+  id: string,
+  image: string,
+  name: string,
+  rating: {
+    stars: number,
+    count: number
+  },
+  priceCents: number,
+  keywords : string[]
+}
+
+type Productprops = {
+  product: ProductType
+}
+
+export default function Product({ product }: Productprops) {
 
   return (
     <div className="product-container"

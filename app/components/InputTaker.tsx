@@ -1,5 +1,5 @@
 "use client"
-import { useCart } from "@/context/CartContext";
+import loadCartData from "@/app/utiles/loadCartData";
 import axios from "axios";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
@@ -7,9 +7,9 @@ import { ChangeEvent, useState } from "react";
 //  quantity: number;
 //};
 
-export default function InputTaker({ product } : {product:{id:number}}) {
+export default function InputTaker({ product } : {product:{id:string}}) {
 
-  const { loadCartData } = useCart();
+
 
   const addToCart = async () => {
     await axios.post('http://localhost:3000/api/cart-items', {

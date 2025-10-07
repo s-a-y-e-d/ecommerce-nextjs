@@ -4,13 +4,14 @@ import PaymentSummery from './PaymentSummery'
 import OrderSummery from './OrderSummery';
 import './styles/checkout-header.css'
 import './styles/CheckoutPage.css'
+import { Suspense } from 'react';
 
 export default async function CheckoutPage() {
 
   const cartResponse = await axios.get(
     'http://localhost:3000/api/cart-items?expand=product'
   );
-  let cart = cartResponse.data;
+  const cart = cartResponse.data;
 
 
   const paymentSummeryResponse = await axios.get(
@@ -47,7 +48,10 @@ export default async function CheckoutPage() {
         <div className="checkout-grid">
 
           <div className="order-summary">
-            <OrderSummery cart={cart} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <OrderSummery cart={cart} />
+            </Suspense>
+            
           </div>
 
           {paymentSummery && (

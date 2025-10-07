@@ -1,19 +1,20 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { formateMoney } from '../utilities/money';
-import { useState, useEffect, Fragment } from 'react';
-import { Header } from '../components/Header';
-import { Link } from 'react-router';
+import { Fragment } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import Header from '../components/Header';
+import formateMoney from '../utiles/money';
 import './OrdersPage.css';
-export default function OrdersPage({ cart }) {
-  const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/orders?expand=products')
-      .then((response) => {
-        setOrders(response.data);
-      });
-  }, []);
+export default async function OrdersPage({ cart }) {
+
+
+  const response = await axios.get(
+    'http://localhost:3000/api/orders?expand=products'
+  );
+  const orders = response.data;
+
   return (
     <>
       <Header cart={cart} />
@@ -52,7 +53,7 @@ export default function OrdersPage({ cart }) {
                     return (
                       <Fragment key={orderProduct.product.id}>
                         <div className="product-image-container">
-                          <img src={orderProduct.product.image} />
+                          <Image height={110} width={110} alt='product-image' src={`/${orderProduct.product.image}`} />
                         </div>
 
                         <div className="product-details">
@@ -66,7 +67,10 @@ export default function OrdersPage({ cart }) {
                             Quantity: {orderProduct.quantity}
                           </div>
                           <button className="buy-again-button button-primary">
-                            <img className="buy-again-icon" src="images/icons/buy-again.png" />
+                            <Image
+                              height={17.77} width={20}
+                              alt='buy-again-button' className="buy-again-icon"
+                              src="/images/icons/buy-again.png" />
                             <span className="buy-again-message">Add to Cart</span>
                           </button>
                         </div>

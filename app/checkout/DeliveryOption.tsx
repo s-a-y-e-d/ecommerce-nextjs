@@ -3,9 +3,17 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import formateMoney from '../utiles/money';
 import loadCartData from '../utiles/loadCartData';
+import type { CartItem, DeliveryOption } from './OrderSummery';
+
+type Props = {
+  cartItem: CartItem,
+  deliveryOption: DeliveryOption,
+  cart:CartItem[]
+}
+
+export default function DeliveryOption({ deliveryOption, cartItem, cart }: Props) {
 
 
-export default function DeliveryOption({ deliveryOption, cartItem, cart }) {
   let priceString = 'FREE Shipping';
   if (deliveryOption.priceCents > 0) {
     priceString = `$${formateMoney(deliveryOption.priceCents)} - Shipping`;
@@ -18,12 +26,11 @@ export default function DeliveryOption({ deliveryOption, cartItem, cart }) {
     await loadCartData(cart);
   }
 
-  function selectDeliveryOption() {
+  function selectDeliveryOption(){
 
     putDeliveryOption();
 
-    
-    const loadedCartItem = cart.find((loadedCartItem) => {
+    const loadedCartItem: CartItem | undefined = cart.find((loadedCartItem) => {
       return ((loadedCartItem.productId) === (cartItem.productId));
     });
 
@@ -35,8 +42,8 @@ export default function DeliveryOption({ deliveryOption, cartItem, cart }) {
       onClick={selectDeliveryOption}
     >
       <input type="radio"
-        checked={deliveryOption.id === selectDeliveryOption().deliveryOptionId}
-        onChange={() => { console.log(selectDeliveryOption().deliveryOptionId) }}
+        checked={deliveryOption.id === selectDeliveryOption()?.deliveryOptionId}
+        onChange={() => { console.log(selectDeliveryOption()?.deliveryOptionId) }}
         className="delivery-option-input"
         name={`delivery-option-${cartItem.productId}`} />
       <div>
