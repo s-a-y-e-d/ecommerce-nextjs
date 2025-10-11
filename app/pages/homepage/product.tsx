@@ -6,12 +6,10 @@ export type ProductType = {
   id: string,
   image: string,
   name: string,
-  rating: {
-    stars: number,
-    count: number
-  },
+  ratingStars: number,
+  ratingCount: number,
   priceCents: number,
-  keywords : string[]
+  keywords: string[]
 }
 
 type Productprops = {
@@ -26,7 +24,7 @@ export default function Product({ product }: Productprops) {
     >
       <div className="product-image-container">
         <Image className="product-image"
-          data-testid = "product-image"
+          data-testid="product-image"
           src={`/${product.image}`}
           height={180}
           width={180}
@@ -38,14 +36,14 @@ export default function Product({ product }: Productprops) {
       </div>
 
       <div className="product-rating-container">
-        <Image 
+        <Image
           className="product-rating-stars" data-testid="rating-image"
-          src={`/images/ratings/rating-${(product.rating.stars) * 10}.png`}
+          src={`/images/ratings/rating-${(product.ratingStars) * 10}.png`}
           height={19.78}
           width={100}
           alt='rating-image' />
         <div className="product-rating-count link-primary">
-          {product.rating.count}
+          {product.ratingCount}
         </div>
       </div>
 
@@ -53,9 +51,9 @@ export default function Product({ product }: Productprops) {
         {`$${formateMoney(product.priceCents)}`}
       </div>
 
-      <InputTaker product={product}/>
+      <InputTaker product={product} />
 
-      
+
     </div>
   );
 }

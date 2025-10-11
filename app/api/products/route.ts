@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server'
+import prisma from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
-  return NextResponse.json({ message: 'Hello from the backend!' })
+  const products = await prisma.product.findMany();
+  return NextResponse.json(products);
 }

@@ -6,13 +6,13 @@ import formateMoney from "../utiles/money";
 import loadCartData from "../utiles/loadCartData";
 import DeleteCartItem from "../components/DeleteCartItem";
 import { Suspense } from "react";
-import { Product } from "../pages/homepage/product";
+import { ProductType } from "../pages/homepage/product";
 
 export type CartItem = {
   productId: string,
   quantity: number,
   deliveryOptionId: string,
-  product: Product
+  product: ProductType
 };
 
 type CartProps={

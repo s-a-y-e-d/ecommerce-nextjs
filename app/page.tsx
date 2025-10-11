@@ -1,7 +1,6 @@
 import HomePage from '@/app/pages/homepage/HomePage'
 import styles from "./page.module.css";
-
-export default function Home() {
+export default async function Home() {
   return (
     <div className={styles.page}>
       <main >

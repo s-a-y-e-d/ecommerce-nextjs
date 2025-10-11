@@ -7,7 +7,7 @@ import { ChangeEvent, useState } from "react";
 //  quantity: number;
 //};
 
-export default function InputTaker({ product } : {product:{id:string}}) {
+export default function InputTaker({ product }: { product: { id: string } }) {
 
 
 
@@ -18,6 +18,7 @@ export default function InputTaker({ product } : {product:{id:string}}) {
     });
     await loadCartData();
   };
+
   const [quantity, setQuantity] = useState(1);
 
   const selectQuantity = (event: ChangeEvent<HTMLSelectElement>) => {
