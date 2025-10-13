@@ -1,21 +1,17 @@
-"use client"
 import Link from "next/link";
-import  useCart  from '@/context/CartContext';
-import { useEffect } from "react";
 import Image from "next/image";
+import { unstable_cache } from "next/cache";
+import prisma from "@/lib/prisma";
 
-export default function CartLink() {
-  const { cart, loadCartData } = useCart();
+export default async function CartLink() {
 
-  let totalQuantity = 0;
-
-  cart.forEach((cartItem: {quantity:number}) => {
-    totalQuantity += cartItem.quantity;
-  });
-  useEffect(() => {
-    loadCartData();
-  }, []);
-
+  const getCachedCart = unstable_cache(
+    async () => prisma.cart.findMany(), ['cart']
+  );
+  const cart = await getCachedCart();
+  const totalQuantity = cart.reduce((quantity, cartItem) => {
+    return quantity + cartItem.quantity;
+  }, 0);
   return (
     <Link className="cart-link header-link" href="/checkout">
       <Image className="cart-icon" src="/images/icons/cart-icon.png"

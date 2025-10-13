@@ -1,22 +1,14 @@
-import formateMoney from '../../utiles/money';
+import formateMoney from '@/app/utiles/money';
 import Image from 'next/image';
 import InputTaker from '@/app/components/InputTaker';
+import { Product } from '@/app/generated/prisma';
 
-export type ProductType = {
-  id: string,
-  image: string,
-  name: string,
-  ratingStars: number,
-  ratingCount: number,
-  priceCents: number,
-  keywords: string[]
-}
 
 type Productprops = {
-  product: ProductType
+  product: Product
 }
 
-export default function Product({ product }: Productprops) {
+export default function ProductCard({ product }: Productprops) {
 
   return (
     <div className="product-container"

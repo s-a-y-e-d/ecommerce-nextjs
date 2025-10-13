@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import './header.css'
 import CartLink from './CartLink';
-export default function Header() {
+export default async function Header() {
 
 
   return (

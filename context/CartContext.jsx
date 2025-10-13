@@ -1,4 +1,5 @@
 "use client"
+/*
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -32,3 +33,4 @@ export function CartProvider({ children }) {
 export default function useCart() {
   return useContext(CartContext);
 }
+  */

@@ -1,5 +1,4 @@
-import  Header  from "./components/Header";
-import { CartProvider } from '@/context/CartContext'
+import Header from "./components/Header";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,12 +27,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        
-        <CartProvider>
-          <Header />
-          {children}
-        </CartProvider>
-        
+        <Header />
+        {children}
       </body>
     </html>
   );

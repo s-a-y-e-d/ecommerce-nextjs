@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -28,7 +28,7 @@ model Product {
 model Cart {
   id               String          @id @default(cuid())
   productId        String          @unique
-  qantity          Int
+  quantity         Int
   product          Product         @relation(fields: [productId], references: [id])
   deliveryoptionId String?
   deliveryOption   DeliveryOption? @relation(fields: [deliveryoptionId], references: [id])

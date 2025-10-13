@@ -2,13 +2,13 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import formateMoney from '../utiles/money';
-import loadCartData from '../utiles/loadCartData';
+import loadCartData from '../utiles/cartUtiles';
 import type { CartItem, DeliveryOption } from './OrderSummery';
 
 type Props = {
   cartItem: CartItem,
   deliveryOption: DeliveryOption,
-  cart:CartItem[]
+  cart: CartItem[]
 }
 
 export default function DeliveryOption({ deliveryOption, cartItem, cart }: Props) {
@@ -26,7 +26,7 @@ export default function DeliveryOption({ deliveryOption, cartItem, cart }: Props
     await loadCartData(cart);
   }
 
-  function selectDeliveryOption(){
+  function selectDeliveryOption() {
 
     putDeliveryOption();
 

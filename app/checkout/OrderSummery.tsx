@@ -3,20 +3,20 @@ import dayjs from 'dayjs';
 import Image from "next/image";
 import DeliveryOption from "./DeliveryOption";
 import formateMoney from "../utiles/money";
-import loadCartData from "../utiles/loadCartData";
+import { loadCartData } from "../utiles/cartUtiles";
 import DeleteCartItem from "../components/DeleteCartItem";
 import { Suspense } from "react";
-import { ProductType } from "../pages/homepage/product";
+import { Product } from '@/app/generated/prisma';
 
 export type CartItem = {
   productId: string,
   quantity: number,
   deliveryOptionId: string,
-  product: ProductType
+  product: Product
 };
 
-type CartProps={
-  cart:CartItem[]
+type CartProps = {
+  cart: CartItem[]
 };
 
 export type DeliveryOption = {
@@ -79,9 +79,9 @@ export default async function OrderSummery({ cart }: CartProps) {
               {deliveryOptions.map((deliveryOption: DeliveryOption) => {
                 return (
                   <Suspense key={deliveryOption.id} fallback={<div>Loading...</div>}>
-                    <DeliveryOption  deliveryOption={deliveryOption} cartItem={cartItem} cart={cart} />
+                    <DeliveryOption deliveryOption={deliveryOption} cartItem={cartItem} cart={cart} />
                   </Suspense>
-                  
+
                 );
               })}
             </div>

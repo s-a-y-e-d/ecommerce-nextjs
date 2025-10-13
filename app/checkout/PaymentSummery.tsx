@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import formateMoney from "../utiles/money";
-import loadCartData from "../utiles/loadCartData";
+import loadCartData from "../utiles/cartUtiles";
 import PlaceOrderBtn from '../components/PlaceOrderbtn';
 
 type PaymentSummery = {
@@ -12,7 +12,7 @@ type PaymentSummery = {
   totalCostCents: number
 }
 type Props = {
-  cart:[],
+  cart: [],
   paymentSummery: PaymentSummery
 }
 

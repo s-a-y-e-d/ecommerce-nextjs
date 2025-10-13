@@ -1,23 +1,14 @@
 "use client"
-import loadCartData from "@/app/utiles/loadCartData";
-import axios from "axios";
+import { addToCart } from "@/app/utiles/cartUtiles";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 //type Props = {
 //  quantity: number;
 //};
 
 export default function InputTaker({ product }: { product: { id: string } }) {
 
-
-
-  const addToCart = async () => {
-    await axios.post('http://localhost:3000/api/cart-items', {
-      productId: product.id,
-      quantity
-    });
-    await loadCartData();
-  };
 
   const [quantity, setQuantity] = useState(1);
 
@@ -54,7 +45,7 @@ export default function InputTaker({ product }: { product: { id: string } }) {
 
       <button className="add-to-cart-button button-primary"
         data-testid='add-to-cart-button'
-        onClick={addToCart}>
+        onClick={() => { addToCart(product.id, quantity) }}>
         Add to Cart
       </button>
     </>

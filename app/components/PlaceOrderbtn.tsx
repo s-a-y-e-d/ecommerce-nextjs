@@ -1,6 +1,6 @@
 "use client"
 import axios from "axios"
-import loadCartData from "../utiles/loadCartData"
+import loadCartData from "../utiles/cartUtiles"
 export default function PlaceOrderBtn({ cart }: { cart: [] }) {
   const addToOrders = async () => {
     await axios.post('http://localhost:3000/api/orders');
