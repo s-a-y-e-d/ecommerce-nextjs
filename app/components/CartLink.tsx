@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 export default async function CartLink() {
 
   const getCachedCart = unstable_cache(
-    async () => { return prisma.cart.findMany() }, ['cart'], { revalidate: 30 }
+    async () => { return prisma.cart.findMany() }, ['cartId'], { tags: ['cart'] }
   );
   const cart = await getCachedCart();
   const totalQuantity = cart.reduce((quantity, cartItem) => {

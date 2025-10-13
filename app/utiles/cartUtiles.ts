@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 
 export async function loadCartData() {
@@ -22,6 +22,6 @@ export async function addToCart(productId: string, quantity: number) {
   });
 
   const cartData = await loadCartData();
-  revalidatePath('/');
+  revalidateTag('cart');
   return { updatedItem, cartData };
 }
