@@ -2,10 +2,6 @@
 import { addToCart } from "@/app/utiles/cartUtiles";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-//type Props = {
-//  quantity: number;
-//};
 
 export default function InputTaker({ product }: { product: { id: string } }) {
 
