@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import './header.css'
 import CartLink from './CartLink';
+import Image from 'next/image';
 export default async function Header() {
 
 
@@ -9,10 +10,18 @@ export default async function Header() {
       <div className="header">
         <div className="left-section">
           <Link href="/" className="header-link">
-            <img className="logo"
-              src="images/logo-white.png" />
-            <img className="mobile-logo"
-              src="images/mobile-logo-white.png" />
+            <Image className="logo"
+              src="/images/logo-white.png"
+              alt='something'
+              height={26}
+              width={177.219}
+            />
+            <Image className="mobile-logo"
+              src="/images/mobile-logo-white.png"
+              alt='something'
+              height={26}
+              width={22.531}
+            />
           </Link>
         </div>
 
@@ -20,7 +29,10 @@ export default async function Header() {
           <input className="search-bar" type="text" placeholder="Search" />
 
           <button className="search-button">
-            <img className="search-icon" src="images/icons/search-icon.png" />
+            <Image className="search-icon" src="/images/icons/search-icon.png"
+              alt='something'
+              height={20}
+              width={17.5} />
           </button>
         </div>
 
