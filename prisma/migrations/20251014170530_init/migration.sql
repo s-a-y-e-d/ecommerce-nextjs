@@ -16,14 +16,14 @@ CREATE TABLE "Cart" (
     "id" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "deliveryoptionId" TEXT,
+    "deliveryoptionId" INTEGER DEFAULT 1,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "DeliveryOption" (
-    "id" TEXT NOT NULL,
+    "id" INTEGER NOT NULL,
     "deliveryDays" INTEGER NOT NULL,
     "priceCents" INTEGER NOT NULL,
 

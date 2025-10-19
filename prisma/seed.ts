@@ -28,7 +28,7 @@ const productData: Prisma.ProductCreateInput[] = [
     keywords: ["tshirts", "apparel", "mens"],
   },
   {
-    image: "images/products/2-slot-toaster-white.jpg",
+    image: "images/products/elegant-white-dinner-plate-set.jpg",
     name: "2 Slot Toaster - White",
     ratingStars: 5,
     ratingCount: 2197,

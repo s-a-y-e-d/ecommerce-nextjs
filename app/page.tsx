@@ -1,14 +1,11 @@
-import prisma from '@/lib/prisma';
 import ProductCard from './homepage/product';
 import { Product } from '@/app/generated/prisma';
 import '@/app/homepage/HomePage.css'
-import { unstable_cache } from 'next/cache';
+import { getProductsData } from '@/lib/data';
 
 export default async function Home() {
-  const getCachedProducts = unstable_cache(async () => {
-    return prisma.product.findMany();
-  });
-  const products = await getCachedProducts();
+  const products = await getProductsData();
+
   return (
     <main className="home-page">
       <div className="products-grid">

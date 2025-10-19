@@ -1,5 +1,5 @@
 "use client"
-import { addToCart } from "@/app/utiles/cartUtiles";
+import { addToCart } from "@/app/utiles/actions";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 
