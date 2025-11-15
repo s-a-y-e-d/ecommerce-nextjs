@@ -1,7 +1,9 @@
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
 
-export default async function CartLink() {
+export default function CartLink() {
 
   return (
     <Link className="cart-link header-link" href="/checkout">

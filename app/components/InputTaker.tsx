@@ -1,20 +1,30 @@
 "use client"
-import { addToCart } from "@/app/utiles/actions";
+import { addToCart } from "@/lib/utiles/actions";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import styles from "./InputTaker.module.css";
 
 export default function InputTaker({ product }: { product: { id: string } }) {
 
 
   const [quantity, setQuantity] = useState(1);
+  const [showAddedMessage, setShowAddedMessage] = useState(false);
 
   const selectQuantity = (event: ChangeEvent<HTMLSelectElement>) => {
     setQuantity(Number(event.target.value));
   };
 
+  const handleAddToCart = () => {
+    addToCart(product.id, quantity);
+    setShowAddedMessage(true);
+    setTimeout(() => {
+      setShowAddedMessage(false);
+    }, 2000); // Message disappears after 2 seconds
+  };
+
   return (
     <>
-      <div className="product-quantity-container">
+      <div className={styles.productQuantityContainer}>
         <select value={quantity}
           onChange={selectQuantity}>
           <option value="1">1</option>
@@ -31,7 +41,7 @@ export default function InputTaker({ product }: { product: { id: string } }) {
       </div>
       <div className="product-spacer"></div>
 
-      <div className="added-to-cart">
+      <div className={`${styles.addedToCart} ${showAddedMessage ? styles.addedToCartVisible : ''}`}>
         <Image src="/images/icons/checkmark.png"
           height={19}
           width={16.625}
@@ -39,11 +49,11 @@ export default function InputTaker({ product }: { product: { id: string } }) {
         Added
       </div>
 
-      <button className="add-to-cart-button button-primary"
+      <button className={`${styles.addToCartButton} button-primary`}
         data-testid='add-to-cart-button'
-        onClick={() => { addToCart(product.id, quantity) }}>
+        onClick={handleAddToCart}>
         Add to Cart
       </button>
     </>
-  )
+  );
 }

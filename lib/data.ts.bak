@@ -1,0 +1,80 @@
+"use server"
+
+import prisma from "./prisma";
+import { redirect } from "next/navigation";
+
+export async function getCartData(userId: string, includeProducts = true, includeDelivery = true) {
+  if (!userId) {
+    redirect('/auth');
+  }
+
+  const cart = await prisma.cart.upsert({
+    where: { userId: userId },
+    update: {},
+    create: { userId: userId },
+    include: {
+      items: {
+        include: {
+          product: includeProducts,
+          deliveryOption: includeDelivery,
+        },
+      },
+    },
+  });
+
+  return cart;
+}
+
+export async function getCartItemsData(userId: string, includeProducts = true, includeDelivery = true) {
+  if (!userId) {
+    redirect('/auth');
+  }
+  try {
+    const cartItems = await prisma.cartItem.findMany({
+      where: {
+        cart: {
+          userId: userId,
+        },
+      },
+      include: {
+        product: includeProducts,
+        deliveryOption: includeDelivery,
+      },
+    });
+    return cartItems;
+  } catch (e) {
+    return e;
+  }
+
+}
+
+export async function getDeliveryOptionData() {
+  'use cache'
+  return await prisma.deliveryOption.findMany();
+}
+
+
+export async function getProductsData() {
+  "use cache"
+  return await prisma.product.findMany();
+};
+
+
+export async function getPaymentSummeryData(userId: string) {
+  try {
+    return await prisma.paymentSummary.upsert({
+      where: { userId },
+      update: {},
+      create: { userId },
+    });
+  } catch (e) {
+    return e;
+  }
+
+}
+
+export async function getProductBySlug(slug: string) {
+  "use cache"
+  return prisma.product.findFirst({ where: { slug } });
+}
+

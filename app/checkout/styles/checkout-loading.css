@@ -1,0 +1,188 @@
+/* Beautiful Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Skeleton Cart Item Styles */
+.skeleton-cart-item-container {
+  border: 1px solid rgb(222, 222, 222);
+  border-radius: 4px;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+
+.skeleton-delivery-date-new {
+  height: 24px;
+  width: 35%;
+  margin-bottom: 22px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-image-new {
+  height: 120px;
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-product-name-new {
+  height: 20px;
+  width: 85%;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-product-price-new {
+  height: 18px;
+  width: 60%;
+  margin-bottom: 5px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-quantity-new {
+  height: 16px;
+  width: 70%;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-link-new {
+  height: 16px;
+  width: 50px;
+  margin-top: 8px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-delivery-title-new {
+  height: 18px;
+  width: 75%;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-delivery-option-new {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  margin-bottom: 12px;
+}
+
+.skeleton-checkbox-new {
+  height: 24px;
+  width: 24px;
+  min-width: 24px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-delivery-text-new {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 4px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-delivery-price-new {
+  height: 14px;
+  width: 80%;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+/* Skeleton Payment Summary Styles */
+.skeleton-payment-summary {
+  border: 1px solid rgb(222, 222, 222);
+  border-radius: 4px;
+  padding: 18px;
+  padding-bottom: 5px;
+}
+
+.skeleton-payment-title-new {
+  height: 20px;
+  width: 65%;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-payment-row-new {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 9px;
+  height: 16px;
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}

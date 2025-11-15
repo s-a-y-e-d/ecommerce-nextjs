@@ -1,18 +1,72 @@
-import { unstable_cache } from "next/cache";
-import prisma from "./prisma";
+﻿"use server"
 
-export async function getCartData(includeProduct: boolean, includeDeliveryOption: boolean) {
-  return prisma.cart.findMany({
+import prisma from "./prisma";
+import { redirect } from "next/navigation";
+
+export async function getCartData(userId: string, includeProducts = true) {
+  if (!userId) {
+    redirect('/auth');
+  }
+
+  const cart = await prisma.cart.upsert({
+    where: { userId: userId },
+    update: {},
+    create: { userId: userId },
     include: {
-      product: includeProduct,
-      deliveryOption: includeDeliveryOption,
+      items: {
+        include: {
+          product: includeProducts,
+        },
+      },
     },
   });
-}
-export const getProductsData = unstable_cache(() => {
-  return prisma.product.findMany();
-});
 
-export async function getPaymentSummeryData() {
-  return prisma.paymentSummery.findFirstOrThrow();
+  return cart;
+}
+
+export async function getCartItemsData(userId: string, includeProducts = true) {
+  if (!userId) {
+    redirect('/auth');
+  }
+  try {
+    const cartItems = await prisma.cartItem.findMany({
+      where: {
+        cart: {
+          userId: userId,
+        },
+      },
+      include: {
+        product: includeProducts,
+      },
+    });
+    return cartItems;
+  } catch (e) {
+    return e;
+  }
+
+}
+
+
+export async function getProductsData() {
+  "use cache"
+  return await prisma.product.findMany();
+};
+
+
+export async function getPaymentSummeryData(userId: string) {
+  try {
+    return await prisma.paymentSummary.upsert({
+      where: { userId },
+      update: {},
+      create: { userId },
+    });
+  } catch (e) {
+    return e;
+  }
+
+}
+
+export async function getProductBySlug(slug: string) {
+  "use cache"
+  return prisma.product.findFirst({ where: { slug } });
 }

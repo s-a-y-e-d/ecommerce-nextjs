@@ -1,14 +1,16 @@
 import Link from 'next/link';
-import formateMoney from "../utiles/money";
-import { PaymentSummery } from "@/app/generated/prisma";
-import { getPaymentSummeryData } from '@/lib/data';
+import formateMoney from "../../lib/utiles/money";
+import { PaymentSummary } from "@/app/generated/prisma";
+
+type Props = {
+  totalQuantity: number,
+  optimisticPaymentSummery: PaymentSummary,
+}
+
+export default function PaymentSummeryCard({ totalQuantity, optimisticPaymentSummery }: Props) {
 
 
-export default async function PaymentSummeryCard({ totalQuantity }: { totalQuantity: number }) {
-
-  const paymentSummery: PaymentSummery = await getPaymentSummeryData();
-
-  const totalBeforeTax: number = paymentSummery.itemsTotalPrice + paymentSummery.shippingPrice;
+  const totalBeforeTax: number = optimisticPaymentSummery.itemsTotalPrice + optimisticPaymentSummery.shippingPrice;
   const tax: number = totalBeforeTax * 0.1;
   return (
     <>
@@ -19,31 +21,35 @@ export default async function PaymentSummeryCard({ totalQuantity }: { totalQuant
 
         <div className="payment-summary-row">
           <div>Items ({totalQuantity}):</div>
-          <div className="payment-summary-money">${formateMoney(paymentSummery.itemsTotalPrice)}</div>
+          <div className="payment-summary-money">${formateMoney(optimisticPaymentSummery.itemsTotalPrice)}</div>
         </div>
 
         <div className="payment-summary-row">
           <div>Shipping &amp; handling:</div>
-          <div className="payment-summary-money">${formateMoney(paymentSummery.shippingPrice)}</div>
+          <div className="payment-summary-money">${optimisticPaymentSummery.itemsTotalPrice && formateMoney(optimisticPaymentSummery.shippingPrice)}</div>
         </div>
 
         <div className="payment-summary-row subtotal-row">
           <div>Total before tax:</div>
-          <div className="payment-summary-money">${formateMoney(totalBeforeTax)}</div>
+          <div className="payment-summary-money">${optimisticPaymentSummery.itemsTotalPrice ? formateMoney(totalBeforeTax) : formateMoney(0)}</div>
         </div>
 
         <div className="payment-summary-row">
           <div>Estimated tax (10%):</div>
-          <div className="payment-summary-money">${formateMoney(tax)}</div>
+          <div className="payment-summary-money">${optimisticPaymentSummery.itemsTotalPrice ? formateMoney(tax) : formateMoney(0)}</div>
         </div>
 
         <div className="payment-summary-row total-row">
           <div>Order total:</div>
-          <div className="payment-summary-money">${formateMoney(totalBeforeTax + tax)}</div>
+          <div className="payment-summary-money">{optimisticPaymentSummery.itemsTotalPrice ? `${formateMoney(totalBeforeTax + tax)}` : "Ayo Pls order smthing I'm goribz"}</div>
         </div>
 
         <Link href="/orders">
-          {/*<PlaceOrderBtn cart={cart} />*/}
+          <button className="place-order-button button-primary"
+          //onClick={addToOrders}
+          >
+            Place your order
+          </button>
         </Link>
 
       </div>
@@ -51,3 +57,4 @@ export default async function PaymentSummeryCard({ totalQuantity }: { totalQuant
 
   )
 }
+

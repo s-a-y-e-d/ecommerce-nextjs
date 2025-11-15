@@ -1,0 +1,35 @@
+.relatedProductsContainer {
+  max-width: 1200px;
+  margin: 60px auto;
+}
+
+.relatedProductsTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  margin-left: 40px;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1000px) {
+  .productsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 575px) {
+  .productsGrid {
+    grid-template-columns: 1fr;
+  }
+}

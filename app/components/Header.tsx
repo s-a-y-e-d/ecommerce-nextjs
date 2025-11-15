@@ -1,10 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import './header.css'
 import CartLink from './CartLink';
 import Image from 'next/image';
-export default async function Header() {
 
-
+export default function Header() {
   return (
     <>
       <div className="header">

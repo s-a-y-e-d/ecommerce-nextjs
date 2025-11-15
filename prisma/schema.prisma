@@ -11,48 +11,138 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") // points to the connection pool for queries
 }
 
 model Product {
-  id          String @id @default(cuid())
+  id          String     @id @default(cuid())
   image       String
   name        String
-  ratingStars Float
-  ratingCount Int
+  ratingStars Float      @default(0)
+  ratingCount Int        @default(0)
   priceCents  Int
   keywords    Json?
-  Cart        Cart[]
+  slug        String     @unique
+  cartItems   CartItem[] // was Cart[]
+
+  @@index([slug])
 }
 
 model Cart {
-  id               String         @id @default(cuid())
-  productId        String         @unique
-  quantity         Int
-  product          Product        @relation(fields: [productId], references: [id])
-  deliveryoptionId Int            @default(1)
-  deliveryOption   DeliveryOption @relation(fields: [deliveryoptionId], references: [id])
-  order            Order[]
+  id     String @id @default(cuid())
+  userId String @unique // one cart per user
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  items     CartItem[] // the product rows for this cart
+  orders    Order[] // optional: orders created from this cart
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int    @default(1)
+
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  deliveryOptionId Int            @default(1)
+  deliveryOption   DeliveryOption @relation(fields: [deliveryOptionId], references: [id])
+
+  product Product @relation(fields: [productId], references: [id])
+
+  // ensure a product appears at most once per cart
+  @@unique([cartId, productId])
 }
 
 model DeliveryOption {
-  id           Int    @id
-  deliveryDays Int    @unique
-  priceCents   Int    @unique
-  cart         Cart[]
+  id           Int        @id
+  deliveryDays Int        @unique
+  priceCents   Int        @unique
+  cartItems    CartItem[]
 }
 
-model PaymentSummery {
+model PaymentSummary {
   id              String @id @default(cuid())
   itemsTotalPrice Int    @default(0)
   shippingPrice   Int    @default(0)
   totalBeforeTax  Int    @default(0)
   tax             Int    @default(0)
   total           Int    @default(0)
+  userId          String @unique // one cart per user
+  user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id     String @id @default(cuid())
-  cartId String
-  cart   Cart   @relation(fields: [cartId], references: [id])
+  id        String   @id @default(cuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id             String          @id
+  name           String
+  email          String
+  emailVerified  Boolean         @default(false)
+  image          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  cart           Cart?
+  paymentSummary PaymentSummary?
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  // optional relation back to the single cart
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
 }

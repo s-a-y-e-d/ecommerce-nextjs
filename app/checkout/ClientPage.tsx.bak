@@ -1,0 +1,61 @@
+﻿'use client'
+
+import { Suspense, useOptimistic } from 'react'
+import CartItemCardSkeleton from './CartItemCardSkeleton';
+import CartItemCard from './CartItemCard';
+import PaymentSummerySkeleton from './PaymentSummerySkeleton';
+import PaymentSummeryCard from './PaymentSummery';
+import { CartItem, PaymentSummary, Product } from '../generated/prisma';
+
+type CartItemWithProduct = CartItem & {
+  product: Product;
+};
+
+type CartItems = CartItemWithProduct[];
+
+type Props = {
+  cartItems: CartItems,
+  paymentSummeryPromise: Promise<PaymentSummary>
+  userId: string,
+}
+
+export default function ClientPage({ cartItems, paymentSummeryPromise, userId }: Props) {
+
+  type OptimisticAction = { type: String; id: string };
+
+  const [optimisticCartItems, setOptimisticCartItems] = useOptimistic<CartItems, OptimisticAction>(
+    cartItems,
+    (state, action) => {
+      switch (action.type) {
+        case 'deleteCartItem': {
+          return state.filter((i) => i.id !== action.id);
+        }
+        default: {
+          return state;
+        }
+      }
+    }
+  )
+  return (
+    <>
+      <div className="order-summary">
+        {optimisticCartItems.map((cartItem: CartItemWithProduct) => {
+          return (
+            <Suspense
+              key={cartItem.id}
+              fallback={<CartItemCardSkeleton />}>
+
+              <CartItemCard cartItem={cartItem} />
+
+            </Suspense>
+          );
+        })}
+
+      </div>
+
+      <Suspense fallback={<PaymentSummerySkeleton />}>
+        <PaymentSummeryCard totalQuantity={0} paymentSummeryPromise={paymentSummeryPromise} userId={userId} />
+      </Suspense>
+    </>
+  )
+}

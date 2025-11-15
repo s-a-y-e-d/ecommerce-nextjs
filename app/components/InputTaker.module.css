@@ -1,0 +1,34 @@
+.productQuantityContainer {
+  margin-bottom: 20px;
+}
+
+.addToCartButton {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.addedToCart {
+  display: flex;
+  align-items: center;
+  color: #007185;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.addedToCartVisible {
+  opacity: 1;
+}
+
+.addedToCart img {
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .addToCartButton {
+    width: 100%;
+  }
+}

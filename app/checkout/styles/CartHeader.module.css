@@ -1,4 +1,4 @@
-.checkout-header {
+.checkoutHeader {
   height: 60px;
   padding-left: 30px;
   padding-right: 30px;
@@ -14,7 +14,7 @@
   z-index: 1000;
 }
 
-.checkout-header .header-content {
+.headerContent {
   width: 100%;
   max-width: 1100px;
 
@@ -22,16 +22,16 @@
   align-items: center;
 }
 
-.checkout-header .checkout-header-left-section {
+.checkoutHeaderLeftSection {
   width: 200px;
 }
 
-.checkout-header .logo {
+.logo {
   height: auto;
   margin-top: 0px;
 }
 
-.checkout-header .mobile-logo {
+.mobileLogo {
   display: none;
 }
 
@@ -40,21 +40,21 @@
    means when the screen width is 575px or less, different
    styles (inside the {...}) will be applied. */
 @media (max-width: 575px) {
-  .checkout-header .checkout-header-left-section {
+  .checkoutHeaderLeftSection {
     width: auto;
   }
 
-  .checkout-header .logo {
+  .logo {
     display: none;
   }
 
-  .checkout-header .mobile-logo {
+  .mobileLogo {
     display: inline-block;
     height: auto;
   }
 }
 
-.checkout-header .checkout-header-middle-section {
+.checkoutHeaderMiddleSection {
   flex: 1;
   flex-shrink: 0;
   text-align: center;
@@ -66,7 +66,7 @@
   justify-content: center;
 }
 
-.checkout-header .return-to-home-link {
+.returnToHomeLink {
   color: rgb(25, 135, 84);
 
   text-decoration: none;
@@ -74,23 +74,23 @@
 }
 
 @media (max-width: 1000px) {
-  .checkout-header .checkout-header-middle-section {
+  .checkoutHeaderMiddleSection {
     font-size: 20px;
     margin-right: 60px;
   }
 
-  .checkout-header .return-to-home-link {
+  .returnToHomeLink {
     font-size: 20px;
   }
 }
 
 @media (max-width: 575px) {
-  .checkout-header .checkout-header-middle-section {
+  .checkoutHeaderMiddleSection {
     margin-right: 5px;
   }
 }
 
-.checkout-header .checkout-header-right-section {
+.checkoutHeaderRightSection {
   text-align: right;
   width: 200px;
   display: flex;
@@ -98,12 +98,12 @@
   justify-content: end;
 }
 
-.checkout-header .checkout-header-right-section img {
+.checkoutHeaderRightSection img {
   height: 32px;
 }
 
 @media (max-width: 1000px) {
-  .checkout-header .checkout-header-right-section {
+  .checkoutHeaderRightSection {
     width: auto;
   }
 }

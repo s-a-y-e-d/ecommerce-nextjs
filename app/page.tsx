@@ -4,6 +4,7 @@ import '@/app/homepage/HomePage.css'
 import { getProductsData } from '@/lib/data';
 
 export default async function Home() {
+  "use cache"
   const products = await getProductsData();
 
   return (

@@ -1,0 +1,51 @@
+﻿import { getCartItemsData, getPaymentSummeryData } from '@/lib/data';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+import { CartItem, PaymentSummary, Product } from '../generated/prisma';
+import ClientPage from './ClientPage';
+import './styles/CheckoutPage.css'
+import './styles/CartHeader.module.css'
+
+type CartItemWithProduct = CartItem & {
+  product: Product;
+};
+
+type CartItems = CartItemWithProduct[];
+
+export default async function CheckoutPage() {
+
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect('/auth');
+  }
+
+  const userId = session.user.id;
+
+  const cartItems = await getCartItemsData(userId) as CartItems;
+
+  const paymentSummeryPromise = getPaymentSummeryData(userId) as Promise<PaymentSummary>;
+
+  const totalQuantity = 0;//cart.items.reduce((sum, item) => {
+  //return sum + item.quantity
+  //}, 0);
+
+  return (
+    <>
+      <title>Checkout</title>
+
+      <div className="checkout-page">
+        <div className="page-title">Review your order</div>
+
+        <div className="checkout-grid">
+
+          <ClientPage cartItems={cartItems} userId={userId} paymentSummeryPromise={paymentSummeryPromise}/>
+
+
+        </div>
+      </div>
+    </>
+  )
+
+}

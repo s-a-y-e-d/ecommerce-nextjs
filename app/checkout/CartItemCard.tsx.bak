@@ -1,0 +1,45 @@
+﻿import formateMoney from "@/lib/utiles/money";
+import Image from "next/image";
+import DeleteCartItem from "../components/DeleteCartItem";
+import { CartItem, Product } from "../generated/prisma";
+
+type CartItemWithProduct = CartItem & {
+  product: Product,
+}
+
+type CartProps = {
+  cartItem: CartItemWithProduct,
+};
+
+export default function CartItemCard({ cartItem }: CartProps) {
+  return (
+    <div className="cart-item-container">
+      <div className="cart-item-details-grid">
+        <Image className="product-image"
+          src={`/${cartItem.product.image}`}
+          height={180}
+          width={180}
+          alt='product-image' />
+
+        <div className="cart-item-details">
+          <div className="product-name">
+            {cartItem.product.name}
+          </div>
+          <div className="product-price">
+            {`$${formateMoney(cartItem.product.priceCents)}`}
+          </div>
+          <div className="product-quantity">
+            <span>
+              Quantity: <span className="quantity-label">{cartItem.quantity}</span>
+            </span>
+            <span className="update-quantity-link link-primary">
+              Update
+            </span>
+            <DeleteCartItem cartItem={cartItem} />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}

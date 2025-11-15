@@ -1,0 +1,92 @@
+.productContainer {
+  padding-top: 40px;
+  padding-bottom: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
+
+  border-right: 1px solid rgb(240, 240, 240);
+  border-bottom: 1px solid rgb(240, 240, 240);
+
+  display: flex;
+  flex-direction: column;
+}
+.productLink{
+  text-decoration: none; 
+  color: inherit;  
+}
+.productImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 180px;
+  margin-bottom: 20px;
+}
+
+.productImage {
+  /* Images overflow the container by default. To prevent this, set
+     max-width and max-height to 100% to stay inside container. */
+
+  border-radius: 5px;
+}
+
+.productName {
+  height: 40px;
+  margin-bottom: 5px;
+}
+
+.productRatingContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.productRatingStars {
+  width: 100px;
+  margin-right: 6px;
+}
+
+.productRatingCount {
+  color: rgb(25, 135, 84);
+  cursor: auto;
+  margin-top: 3px;
+}
+
+.productPrice {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.productQuantityContainer {
+  margin-bottom: 17px;
+}
+
+.productSpacer {
+  flex: 1;
+}
+
+.addedToCart {
+  color: rgb(25, 135, 84);
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+
+  /* At first, the "Added to cart" message will
+     be invisible. Use JavaScript to change the
+     opacity and make it visible. */
+  opacity: 0;
+}
+
+.addedToCart img {
+  height: 19px;
+  margin-right: 6px;
+}
+
+.addToCartButton {
+  width: 100%;
+  padding: 8px;
+  height: 34px;
+  margin-top: 1px;
+}

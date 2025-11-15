@@ -1,5 +1,5 @@
 .checkout-page {
-  max-width: 1100px;
+  max-width: 1200px;
   padding-left: 30px;
   padding-right: 30px;
 
@@ -24,7 +24,7 @@
   display: grid;
   /* Here, 1fr means the first column will take
      up the remaining space in the grid. */
-  grid-template-columns: 1fr 350px;
+  grid-template-columns: 1fr 450px;
   column-gap: 12px;
 
   /* Use align-items: start; to prevent the elements
@@ -119,6 +119,53 @@
   margin-left: 3px;
 }
 
+/* Inline form for Update/Delete actions */
+.checkout-page .product-quantity .inline-action-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.checkout-page .product-quantity .action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: background-color 0.12s ease, color 0.12s ease, transform 0.06s ease;
+}
+
+.checkout-page .product-quantity .action-btn.small,
+.checkout-page .product-quantity .action-btn.action-btn-small {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.checkout-page .product-quantity .update-action-btn {
+  background: #fff;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.checkout-page .product-quantity .delete-action-btn {
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.12);
+}
+
+.checkout-page .product-quantity .action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.checkout-page .product-quantity .action-btn:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 @media (max-width: 1000px) {
   .checkout-page .delivery-options {
     /* grid-column: 1 means this element will be placed
@@ -208,4 +255,111 @@
 
   margin-top: 20px;
   margin-bottom: 19px;
+}
+
+/* Skeleton Styles */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.checkout-page .payment-summary-skeleton {
+  animation: none;
+}
+
+.checkout-page .skeleton-box {
+  background: linear-gradient(90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 4px;
+}
+
+.checkout-page .skeleton-title {
+  height: 18px;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.checkout-page .skeleton-text {
+  height: 15px;
+  width: 70%;
+}
+
+.checkout-page .skeleton-money {
+  height: 15px;
+  width: 50px;
+}
+
+.checkout-page .skeleton-row {
+  animation: none;
+}
+
+/* Cart Item Skeleton Styles */
+.checkout-page .cart-item-skeleton {
+  animation: none;
+}
+
+.checkout-page .skeleton-delivery-date {
+  height: 19px;
+  width: 40%;
+  margin-bottom: 22px;
+}
+
+.checkout-page .skeleton-image {
+  height: 120px;
+  width: 100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.checkout-page .skeleton-product-name {
+  height: 18px;
+  width: 80%;
+  margin-bottom: 8px;
+}
+
+.checkout-page .skeleton-product-price {
+  height: 16px;
+  width: 60%;
+  margin-bottom: 5px;
+}
+
+.checkout-page .skeleton-quantity {
+  height: 15px;
+  width: 70%;
+}
+
+.checkout-page .skeleton-link {
+  height: 15px;
+  width: 50px;
+}
+
+.checkout-page .skeleton-delivery-title {
+  height: 16px;
+  width: 70%;
+  margin-bottom: 10px;
+}
+
+.checkout-page .skeleton-checkbox {
+  height: 24px;
+  width: 24px;
+  min-width: 24px;
+}
+
+.checkout-page .skeleton-delivery-text {
+  height: 15px;
+  width: 100%;
+}
+
+.checkout-page .skeleton-delivery-price {
+  height: 14px;
+  width: 80%;
 }
