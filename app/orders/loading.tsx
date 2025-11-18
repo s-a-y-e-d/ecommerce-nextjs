@@ -1,5 +1,5 @@
-import CartItemCardSkeleton from '../checkout/CartItemCardSkeleton';
-import PaymentSummerySkeleton from '../checkout/PaymentSummerySkeleton';
+import CartItemCardSkeleton from '../components/ui/CartItemCardSkeleton';
+import PaymentSummerySkeleton from '../components/ui/PaymentSummerySkeleton';
 import { Suspense } from 'react';
 import '@/app/checkout/styles/CheckoutPage.css';
 

@@ -1,5 +1,4 @@
-import React from 'react';
-import styles from './styles/Spinner.module.css';
+import styles from './Spinner.module.css';
 
 export default function Spinner({ message }: { message: string }) {
   return (
