@@ -61,7 +61,7 @@ export async function getPaymentSummeryData(userId: string) {
       create: { userId },
     });
   } catch (e) {
-    return e;
+
   }
 
 }
@@ -69,4 +69,27 @@ export async function getPaymentSummeryData(userId: string) {
 export async function getProductBySlug(slug: string) {
   "use cache"
   return prisma.product.findFirst({ where: { slug } });
+}
+
+export async function getOrdersData(userId: string) {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  } catch (e) {
+    return e;
+  }
 }

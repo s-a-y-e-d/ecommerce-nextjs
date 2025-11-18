@@ -15,15 +15,16 @@ datasource db {
 }
 
 model Product {
-  id          String     @id @default(cuid())
+  id          String      @id @default(cuid())
   image       String
   name        String
-  ratingStars Float      @default(0)
-  ratingCount Int        @default(0)
+  ratingStars Float       @default(0)
+  ratingCount Int         @default(0)
   priceCents  Int
   keywords    Json?
-  slug        String     @unique
+  slug        String      @unique
   cartItems   CartItem[] // was Cart[]
+  orderItems  OrderItem[]
 
   @@index([slug])
 }
@@ -34,7 +35,6 @@ model Cart {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   items     CartItem[] // the product rows for this cart
-  orders    Order[] // optional: orders created from this cart
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
 }
@@ -45,22 +45,11 @@ model CartItem {
   productId String
   quantity  Int    @default(1)
 
-  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
-
-  deliveryOptionId Int            @default(1)
-  deliveryOption   DeliveryOption @relation(fields: [deliveryOptionId], references: [id])
-
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
 
   // ensure a product appears at most once per cart
   @@unique([cartId, productId])
-}
-
-model DeliveryOption {
-  id           Int        @id
-  deliveryDays Int        @unique
-  priceCents   Int        @unique
-  cartItems    CartItem[]
 }
 
 model PaymentSummary {
@@ -75,12 +64,25 @@ model PaymentSummary {
 }
 
 model Order {
-  id        String   @id @default(cuid())
-  cartId    String
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  status    String   @default("pending")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  total     Int
+  status    String      @default("pending")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int    @default(1)
+  price     Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model User {
@@ -95,6 +97,7 @@ model User {
   accounts       Account[]
   cart           Cart?
   paymentSummary PaymentSummary?
+  orders         Order[]
 
   @@unique([email])
   @@map("user")

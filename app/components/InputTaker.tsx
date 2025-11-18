@@ -1,59 +1,63 @@
-"use client"
+"use client";
+
 import { addToCart } from "@/lib/utiles/actions";
-import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect, useRef } from "react";
 import styles from "./InputTaker.module.css";
+import { useActionState } from "react";
+import toast from "react-hot-toast";
 
 export default function InputTaker({ product }: { product: { id: string } }) {
 
-
   const [quantity, setQuantity] = useState(1);
-  const [showAddedMessage, setShowAddedMessage] = useState(false);
+
+
+  const [state, formAction, isPending] = useActionState(addToCart, null);
+
+  const lastSubmissionId = useRef<string | null>(null);
+
+  useEffect(() => {
+
+    if (!state?.submissionId) return;
+
+    if (state?.submissionId === lastSubmissionId.current) return;
+
+    lastSubmissionId.current = state.submissionId;
+
+    if (state.error) {
+      toast.error(state.error || "Failed to add to cart", { duration: 1500 });
+    } else {
+      toast.success("Added to cart", { duration: 1500 });
+    }
+  }, [state]);
 
   const selectQuantity = (event: ChangeEvent<HTMLSelectElement>) => {
     setQuantity(Number(event.target.value));
   };
 
-  const handleAddToCart = () => {
-    addToCart(product.id, quantity);
-    setShowAddedMessage(true);
-    setTimeout(() => {
-      setShowAddedMessage(false);
-    }, 2000); // Message disappears after 2 seconds
-  };
-
   return (
     <>
       <div className={styles.productQuantityContainer}>
-        <select value={quantity}
-          onChange={selectQuantity}>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
+        <select value={quantity} onChange={selectQuantity}>
+          {Array.from({ length: 10 }, (_, i) => (
+            <option key={i + 1} value={i + 1}>{i + 1}</option>
+          ))}
         </select>
       </div>
+
       <div className="product-spacer"></div>
 
-      <div className={`${styles.addedToCart} ${showAddedMessage ? styles.addedToCartVisible : ''}`}>
-        <Image src="/images/icons/checkmark.png"
-          height={19}
-          width={16.625}
-          alt='checkmark' />
-        Added
-      </div>
+      <form action={formAction}>
+        <input type="hidden" name="productId" value={product.id} />
+        <input type="hidden" name="quantity" value={quantity} />
 
-      <button className={`${styles.addToCartButton} button-primary`}
-        data-testid='add-to-cart-button'
-        onClick={handleAddToCart}>
-        Add to Cart
-      </button>
+        <button
+          className={`${styles.addToCartButton} button-primary`}
+          type="submit"
+          disabled={isPending}
+        >
+          {isPending ? "Adding..." : "Add to Cart"}
+        </button>
+      </form>
     </>
   );
 }

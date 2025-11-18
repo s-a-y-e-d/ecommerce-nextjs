@@ -1,10 +1,12 @@
 ﻿"use server"
 
-import { getCartData } from "@/lib/data";
+import { getCartData, getCartItemsData } from "@/lib/data";
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { CartItem } from "@/app/generated/prisma";
+import { error } from "console";
 
 
 export default async function calculatePayment() {
@@ -17,9 +19,9 @@ export default async function calculatePayment() {
 
   const userId = session.user.id;
 
-  const cart = await getCartData(userId);
+  const cartItems = await getCartItemsData(userId) as CartItem[];
 
-  const itemsPriceCents = cart.items.reduce((sum: number, cartItem: any) => {
+  const itemsPriceCents = cartItems.reduce((sum: number, cartItem: any) => {
     return sum + (cartItem.product.priceCents * cartItem.quantity);
   }, 0);
 
@@ -40,7 +42,7 @@ export default async function calculatePayment() {
       },
     });
   } catch (e) {
-    console.log(e);
+
   }
 
 }

@@ -1,17 +1,19 @@
-import Link from 'next/link';
 import formateMoney from "../../lib/utiles/money";
 import { PaymentSummary } from "@/app/generated/prisma";
 
 type Props = {
   totalQuantity: number,
   optimisticPaymentSummery: PaymentSummary,
+  formAction: (payload: FormData) => void;
+  isPending: boolean;
 }
 
-export default function PaymentSummeryCard({ totalQuantity, optimisticPaymentSummery }: Props) {
-
+export default function PaymentSummeryCard({ totalQuantity, optimisticPaymentSummery, formAction, isPending }: Props) {
 
   const totalBeforeTax: number = optimisticPaymentSummery.itemsTotalPrice + optimisticPaymentSummery.shippingPrice;
+
   const tax: number = totalBeforeTax * 0.1;
+
   return (
     <>
       <div className="payment-summary">
@@ -44,13 +46,14 @@ export default function PaymentSummeryCard({ totalQuantity, optimisticPaymentSum
           <div className="payment-summary-money">{optimisticPaymentSummery.itemsTotalPrice ? `${formateMoney(totalBeforeTax + tax)}` : "Ayo Pls order smthing I'm goribz"}</div>
         </div>
 
-        <Link href="/orders">
+        <form action={formAction}>
           <button className="place-order-button button-primary"
-          //onClick={addToOrders}
+            type="submit"
+            disabled={isPending}
           >
             Place your order
           </button>
-        </Link>
+        </form>
 
       </div>
     </>

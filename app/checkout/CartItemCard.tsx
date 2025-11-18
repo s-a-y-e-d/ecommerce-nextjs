@@ -44,20 +44,7 @@ export default function CartItemCard({
             <span>
               Quantity: <span className="quantity-label">{cartItem.quantity}</span>
             </span>
-            <form className="inline-action-form"
-              action={async () => {
 
-                await deleteCartItem(cartItem);
-              }}
-            >
-              <button
-                type="submit"
-                className="update-action-btn action-btn action-btn-small button-secondary"
-
-              >
-                Update
-              </button>
-            </form>
             <form className="inline-action-form"
               action={async () => {
                 const updatedItems = optimisticCartItems.filter(item => item.id !== cartItem.id);
