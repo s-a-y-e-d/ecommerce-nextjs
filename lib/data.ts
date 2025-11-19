@@ -46,6 +46,21 @@ export async function getCartItemsData(userId: string, includeProducts = true) {
 
 }
 
+export async function searchProducts(query: string) {
+  "use cache"
+  if (!query) return [];
+
+  return await prisma.product.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
+    take: 5,
+  });
+}
+
 
 export async function getProductsData() {
   "use cache"
