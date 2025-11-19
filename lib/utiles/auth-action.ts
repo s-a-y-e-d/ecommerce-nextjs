@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { auth } from "../auth"
+import { redirect } from "next/navigation";
 
 export async function signUp(email: string, password: string, name: string) {
 
@@ -47,20 +48,22 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signInSocial(provider: 'github' | 'google') {
+  let redirectUrl = null;
   try {
-    const result = await auth.api.signInSocial({
+    const { url } = await auth.api.signInSocial({
       body: {
         provider,
         callbackURL: '/',
       }
     });
-
-    return result;
-
+    redirectUrl = url;
   } catch (error: any) {
     throw new Error(error?.body?.message || "Login failed")
   }
 
+  if (redirectUrl) {
+    redirect(redirectUrl);
+  }
 }
 
 export const getSession = async () => {
