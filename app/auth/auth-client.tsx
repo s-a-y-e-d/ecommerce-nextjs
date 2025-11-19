@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, signUp } from "@/lib/utiles/auth-action";
+import { signIn, signUp, signInSocial } from "@/lib/utiles/auth-action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -47,6 +47,17 @@ export default function AuthClientPage() {
     setGlobalError("");
     clearErrors();
     reset();
+  };
+
+  const handleSocialAuth = async (provider: "google" | "github") => {
+    setGlobalError("");
+    try {
+      await signInSocial(provider);
+    } catch (err) {
+      setGlobalError(
+        `Authentication error: ${err instanceof Error ? err.message : "Unknown error"}`
+      );
+    }
   };
 
   const onSubmit = async (data: AuthFormData) => {
@@ -119,7 +130,7 @@ export default function AuthClientPage() {
           <div className="social-auth-container">
             <button
               type="button"
-              onClick={() => {/* handleSocialAuth("google") */ }}
+              onClick={() => handleSocialAuth("google")}
               disabled={isSubmitting}
               className="social-btn social-btn-google"
             >
@@ -147,7 +158,7 @@ export default function AuthClientPage() {
 
             <button
               type="button"
-              onClick={() => {/* handleSocialAuth("github") */ }}
+              onClick={() => handleSocialAuth("github")}
               disabled={isSubmitting}
               className="social-btn social-btn-github"
             >
