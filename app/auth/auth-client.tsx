@@ -1,72 +1,88 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/utiles/auth-action";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Loader2, AlertCircle, CheckCircle2, Github, Mail } from "lucide-react";
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 import "./auth-client.css";
 
+// Validation Schemas
+const signInSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+  name: z.string().optional(),
+});
+
+const signUpSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+type AuthFormData = z.infer<typeof signInSchema>; // This includes name (optional), email, password
 
 export default function AuthClientPage() {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [globalError, setGlobalError] = useState("");
   const router = useRouter();
 
-  // Get callback URL from search params (set by middleware)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    clearErrors,
+  } = useForm<AuthFormData>({
+    resolver: zodResolver(isSignIn ? signInSchema : signUpSchema),
+    mode: "onBlur",
+  });
 
-  /*const handleSocialAuth = async (provider: "google" | "github") => {
-    setIsLoading(true);
-    setError("");
+  const toggleMode = () => {
+    setIsSignIn(!isSignIn);
+    setGlobalError("");
+    clearErrors();
+    reset();
+  };
 
-    try {
-      await signInSocial(provider);
-    } catch (err) {
-      setError(
-        `Error authenticating with ${provider}: ${err instanceof Error ? err.message : "Unknown error"
-        }`
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };*/
-
-  const handleEmailAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
+  const onSubmit = async (data: AuthFormData) => {
+    setGlobalError("");
 
     try {
       if (isSignIn) {
-        const result = await signIn(email, password);
-        if (!result.user) {
-          setError("Invalid email or password");
-        }
-        else {
-          // navigate to home and refresh client cache so UI updates
-          //router.push('/');
-          try { router.refresh(); } catch (e) { }
+        const result = await signIn(data.email, data.password);
+        if (!result?.user) {
+          setGlobalError("Invalid email or password");
+        } else {
+          try {
+            router.refresh();
+            // router.push('/') is handled by the action or middleware usually, 
+            // but the original code had router.refresh() then maybe push?
+            // The original code did: router.push('/'); try { router.refresh(); } ...
+            // Let's stick to that pattern but safer.
+            router.push('/');
+          } catch (e) {
+            // ignore
+          }
         }
       } else {
-        const result = await signUp(email, password, name);
-        if (!result.user) {
-          setError("Failed to create account");
-        }
-        else {
-          // navigate to home and refresh client cache so UI updates
+        const result = await signUp(data.email, data.password, data.name!);
+        if (!result?.user) {
+          setGlobalError("Failed to create account");
+        } else {
           router.push('/');
           try { router.refresh(); } catch (e) { }
         }
       }
     } catch (err) {
-      setError(
+      setGlobalError(
         `Authentication error: ${err instanceof Error ? err.message : "Unknown error"
         }`
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -86,24 +102,14 @@ export default function AuthClientPage() {
           </div>
 
           {/* Error Display */}
-          {error && (
-            <div className="error-container">
-              <div className="error-flex">
+          {globalError && (
+            <div className={twMerge("error-container", "mb-6")}>
+              <div className="error-flex items-center">
                 <div className="error-icon-container">
-                  <svg
-                    className="error-icon"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <AlertCircle className="error-icon" />
                 </div>
                 <div className="error-text-container">
-                  <p className="error-text">{error}</p>
+                  <p className="error-text">{globalError}</p>
                 </div>
               </div>
             </div>
@@ -112,10 +118,12 @@ export default function AuthClientPage() {
           {/* Social Authentication */}
           <div className="social-auth-container">
             <button
-              onClick={() => {/*handleSocialAuth("google")*/ }}
-              disabled={isLoading}
+              type="button"
+              onClick={() => {/* handleSocialAuth("google") */ }}
+              disabled={isSubmitting}
               className="social-btn social-btn-google"
             >
+              {/* Google Icon - keeping SVG as it's specific */}
               <svg className="social-icon" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
@@ -138,21 +146,12 @@ export default function AuthClientPage() {
             </button>
 
             <button
-              onClick={() => {/*handleSocialAuth("github")*/ }}
-              disabled={isLoading}
+              type="button"
+              onClick={() => {/* handleSocialAuth("github") */ }}
+              disabled={isSubmitting}
               className="social-btn social-btn-github"
             >
-              <svg
-                className="social-icon"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Github className="social-icon" />
               Continue with GitHub
             </button>
           </div>
@@ -162,103 +161,88 @@ export default function AuthClientPage() {
               <div className="divider-line" />
             </div>
             <div className="divider-text-container">
-              <span className="divider-text">
-                Or continue with
-              </span>
+              <span className="divider-text">Or continue with</span>
             </div>
           </div>
 
           {/* Email/Password Form */}
-          <form onSubmit={handleEmailAuth} className="auth-form">
+          <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
             {!isSignIn && (
               <div>
-                <label
-                  htmlFor="name"
-                  className="form-label"
-                >
+                <label htmlFor="name" className="form-label">
                   Full Name
                 </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required={!isSignIn}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="form-input"
-                  placeholder="Enter your full name"
-                />
+                <div className="relative">
+                  <input
+                    id="name"
+                    type="text"
+                    autoComplete="name"
+                    className={clsx(
+                      "form-input",
+                      errors.name && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                    )}
+                    placeholder="Enter your full name"
+                    {...register("name")}
+                  />
+                </div>
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                )}
               </div>
             )}
 
             <div>
-              <label
-                htmlFor="email"
-                className="form-label"
-              >
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="form-input"
-                placeholder="Enter your email"
-              />
+              <div className="relative">
+                <input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  className={clsx(
+                    "form-input",
+                    errors.email && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  placeholder="Enter your email"
+                  {...register("email")}
+                />
+              </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+              )}
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="form-label"
-              >
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete={isSignIn ? "current-password" : "new-password"}
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-input"
-                placeholder="Enter your password"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type="password"
+                  autoComplete={isSignIn ? "current-password" : "new-password"}
+                  className={clsx(
+                    "form-input",
+                    errors.password && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  )}
+                  placeholder="Enter your password"
+                  {...register("password")}
+                />
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="submit-btn"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <div className="spinner-container">
-                  <svg
-                    className="spinner"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <Loader2 className="spinner animate-spin" />
                   {isSignIn ? "Signing in..." : "Creating account..."}
                 </div>
               ) : isSignIn ? (
@@ -273,11 +257,7 @@ export default function AuthClientPage() {
           <div className="toggle-container">
             <button
               type="button"
-              onClick={() => {
-                setIsSignIn(!isSignIn);
-                setError(""); // Clear any previous errors
-                setName(""); // Clear name when switching modes
-              }}
+              onClick={toggleMode}
               className="toggle-btn"
             >
               {isSignIn

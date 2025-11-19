@@ -55,6 +55,9 @@ export async function addToCart(
     await calculatePayment();
     return { submissionId: crypto.randomUUID() };
   } catch (e) {
+    if ((e as any).message === 'NEXT_REDIRECT') {
+      throw e;
+    }
     return { error: "Failed to add to cart", submissionId: crypto.randomUUID() };
   }
 }
