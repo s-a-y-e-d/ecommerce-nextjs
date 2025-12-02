@@ -21,13 +21,13 @@ export default function ProductCard({ product }: Productprops) {
         <div className={styles.productImageContainer}>
           <Image className={styles.productImage}
             data-testid="product-image"
-            src={`/${product.image}`}
+            src={product.image.startsWith('http') || product.image.startsWith('/') ? product.image : `/${product.image}`}
             height={180}
             width={180}
             alt='product-image' />
         </div>
 
-        <div className={`${styles.productName} limit-text-to-2-lines`}>
+        <div className={styles.productName}>
           {product.name}
         </div>
 

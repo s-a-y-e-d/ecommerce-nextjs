@@ -1,7 +1,7 @@
 ﻿import formateMoney from "@/lib/utiles/money";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from 'react';
-import { CartItem, PaymentSummary, Product } from "../generated/prisma";
+import { CartItem, PaymentSummary, Product } from "../../generated/prisma";
 import { deleteCartItem } from "@/lib/utiles/actions";
 
 type CartItemWithProduct = CartItem & {

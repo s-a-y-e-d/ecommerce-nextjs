@@ -1,4 +1,4 @@
-import ProductCard from "@/app/homepage/product";
+import ProductCard from "@/app/(shop)/homepage/product";
 import { Product } from "@/app/generated/prisma";
 import styles from "./RelatedProducts.module.css";
 

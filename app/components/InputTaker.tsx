@@ -37,7 +37,7 @@ export default function InputTaker({ product }: { product: { id: string } }) {
   return (
     <>
       <div className={styles.productQuantityContainer}>
-        <select value={quantity} onChange={selectQuantity}>
+        <select className={styles.quantitySelect} value={quantity} onChange={selectQuantity}>
           {Array.from({ length: 10 }, (_, i) => (
             <option key={i + 1} value={i + 1}>{i + 1}</option>
           ))}

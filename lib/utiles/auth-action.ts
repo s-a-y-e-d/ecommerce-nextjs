@@ -4,36 +4,52 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { auth } from "../auth"
 import { redirect } from "next/navigation";
+import prisma from "../prisma";
 
-export async function signUp(email: string, password: string, name: string) {
-
+export async function signUp(
+  email: string,
+  password: string,
+  name: string,
+  adminKey?: string
+) {
   try {
-    const result = await auth.api.signUpEmail({
-      body: { email, password, name, callbackURL: '/', }
-    });
-    // If signup created a user/session, invalidate the home page so it can
+    const isAdmin = adminKey && adminKey === process.env.ADMIN_KEY;
 
-    // render the updated session/state.
+    if (adminKey && !isAdmin) {
+      throw new Error("Invalid admin access key");
+    }
+
+    // 1️⃣ Create user normally (role cannot be passed here)
+    const result = await auth.api.signUpEmail({
+      body: { email, password, name }
+    });
+
+    // 2️⃣ Assign admin role if adminKey is correct
+    if (isAdmin && result?.user) {
+      await prisma.user.update({
+        where: { id: result.user.id },
+        data: { role: "admin" }
+      });
+    }
+
 
     try {
-      if (result && (result as any).user) {
-        revalidatePath('/');
+      if (isAdmin) {
+        revalidatePath("/admin");
+      } else {
+        revalidatePath("/");        // Normal signup
       }
     } catch (err) {
-      // revalidatePath should be safe to call in a server action; swallow any
-      // unexpected errors to avoid breaking the signup flow.
-      console.error('revalidatePath error', err);
+      console.error("revalidatePath error:", err);
     }
 
     return result;
-
   } catch (error: any) {
-
-    throw new Error(error?.body?.message || "Sign up failed");
-
+    throw new Error(error?.message || "Sign up failed");
   }
-
 }
+
+
 
 export async function signIn(email: string, password: string) {
   try {

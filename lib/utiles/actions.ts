@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import calculatePayment from "./paymentSummery";
 import { getSession } from "./auth-action";
+import { revalidateTag, updateTag } from "next/cache";
 
 type AddToResult = { error?: string, submissionId?: string };
 
@@ -155,3 +156,118 @@ export async function addToOrders(
 
 }
 
+export async function addProduct(formData: FormData) {
+  try {
+    const name = formData.get("name") as string;
+    const id = formData.get("id") as string;
+    const slug = formData.get("slug") as string;
+    const price = formData.get("price") as string;
+    const stock = formData.get("stock") as string;
+    const category = formData.get("category") as string;
+    const description = formData.get("description") as string;
+    const image = formData.get("image") as string;
+
+    // Basic validation
+    if (!name || !id || !slug || !price || !stock || !description || !image) {
+      return { success: false, error: "Missing required fields" };
+    }
+
+    const priceCents = Number(price);
+    if (isNaN(priceCents) || priceCents < 100) {
+      return { success: false, error: "Price must be at least 100 cents" };
+    }
+
+    const existingProduct = await prisma.product.findFirst({
+      where: {
+        OR: [
+          { id },
+          { slug }
+        ]
+      }
+    });
+
+    if (existingProduct) {
+      return { success: false, error: "The id or the slug is already used" };
+    }
+    await prisma.product.create({
+      data: {
+        name,
+        id,
+        priceCents,
+        slug,
+        description,
+        stock: Number(stock),
+        category,
+        image,
+      }
+    });
+
+    updateTag('product');
+    updateTag('allProducts');
+
+    return { success: true };
+  } catch (e) {
+    console.error("Server error adding product:", e);
+    return { success: false, error: (e as Error).message || "Failed to add product" };
+  }
+}
+
+export async function updateProduct(id: string, formData: FormData) {
+  'use server'
+  try {
+    const name = formData.get("name") as string;
+    const formId = formData.get("id") as string;
+    const slug = formData.get("slug") as string;
+    const price = formData.get("price") as string;
+    const stock = formData.get("stock") as string;
+    const category = formData.get("category") as string;
+    const description = formData.get("description") as string;
+    const image = formData.get("image") as string;
+
+    if (!name || !id || !slug || !price || !stock || !description || !image) {
+      return { success: false, error: "Missing required fields" };
+    }
+
+    const priceCents = Number(price);
+    if (isNaN(priceCents) || priceCents < 100) {
+      return { success: false, error: "Price must be at least 100 cents" };
+    }
+
+    const existingProduct = await prisma.product.findFirst({
+      where: {
+        OR: [
+          { id: formId },
+          { slug }
+        ]
+      }
+    });
+
+    if (existingProduct && existingProduct.id !== id) {
+      return { success: false, error: "The id or the slug is already used" };
+    }
+
+
+    await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        id: formId,
+        priceCents,
+        slug,
+        description,
+        stock: Number(stock),
+        category,
+        image,
+      }
+    });
+
+    updateTag('product');
+    updateTag('allProducts');
+
+    return { success: true };
+  } catch (e) {
+    console.error("Server error updating product:", e);
+    return { success: false, error: (e as Error).message || "Failed to update product" };
+  }
+
+}

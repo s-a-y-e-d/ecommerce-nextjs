@@ -2,6 +2,31 @@
   margin-bottom: 20px;
 }
 
+.quantitySelect {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  transition: border-color 0.2s;
+}
+
+.quantitySelect:hover {
+  border-color: var(--ring);
+}
+
+.quantitySelect:focus {
+  border-color: var(--ring);
+}
+
 .addToCartButton {
   margin-top: 20px;
   padding: 12px 24px;

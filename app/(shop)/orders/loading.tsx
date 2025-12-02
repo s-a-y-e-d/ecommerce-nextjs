@@ -1,7 +1,7 @@
-import CartItemCardSkeleton from '../components/ui/CartItemCardSkeleton';
-import PaymentSummerySkeleton from '../components/ui/PaymentSummerySkeleton';
+import CartItemCardSkeleton from '../../components/ui/CartItemCardSkeleton';
+import PaymentSummerySkeleton from '../../components/ui/PaymentSummerySkeleton';
 import { Suspense } from 'react';
-import '@/app/checkout/styles/CheckoutPage.css';
+import '@/app/(shop)/checkout/styles/CheckoutPage.css';
 
 export default function CheckoutLoading() {
   return (

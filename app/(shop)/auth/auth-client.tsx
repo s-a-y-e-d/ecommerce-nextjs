@@ -6,10 +6,11 @@ import { signIn, signUp, signInSocial } from "@/lib/utiles/auth-action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, AlertCircle, CheckCircle2, Github, Mail } from "lucide-react";
+import { Loader2, CheckCircle2, Github, Mail } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import "./auth-client.css";
+import toast from "react-hot-toast";
 
 // Validation Schemas
 const signInSchema = z.object({
@@ -22,13 +23,21 @@ const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  adminKey: z.string().optional(),
 });
 
-type AuthFormData = z.infer<typeof signInSchema>; // This includes name (optional), email, password
+const signUpAdminSchema = signUpSchema.extend({
+  adminKey: z.string().min(1, "Admin key is required"),
+});
+
+type AuthFormData = z.infer<typeof signInSchema> & {
+  name?: string;
+  adminKey?: string;
+};
 
 export default function AuthClientPage() {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [globalError, setGlobalError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   const {
@@ -38,61 +47,64 @@ export default function AuthClientPage() {
     reset,
     clearErrors,
   } = useForm<AuthFormData>({
-    resolver: zodResolver(isSignIn ? signInSchema : signUpSchema),
+    resolver: zodResolver(
+      isSignIn ? signInSchema : isAdmin ? signUpAdminSchema : signUpSchema
+    ),
     mode: "onBlur",
   });
 
   const toggleMode = () => {
     setIsSignIn(!isSignIn);
-    setGlobalError("");
     clearErrors();
     reset();
   };
 
   const handleSocialAuth = async (provider: "google" | "github") => {
-    setGlobalError("");
     try {
       await signInSocial(provider);
     } catch (err) {
-      setGlobalError(
-        `Authentication error: ${err instanceof Error ? err.message : "Unknown error"}`
+      toast.error(
+        `Authentication error`
       );
     }
   };
 
   const onSubmit = async (data: AuthFormData) => {
-    setGlobalError("");
-
     try {
       if (isSignIn) {
         const result = await signIn(data.email, data.password);
         if (!result?.user) {
-          setGlobalError("Invalid email or password");
+          toast.error("Invalid email or password");
         } else {
+          toast.success("Signed in successfully");
           try {
             router.refresh();
-            // router.push('/') is handled by the action or middleware usually, 
-            // but the original code had router.refresh() then maybe push?
-            // The original code did: router.push('/'); try { router.refresh(); } ...
-            // Let's stick to that pattern but safer.
-            router.push('/');
           } catch (e) {
             // ignore
           }
         }
       } else {
-        const result = await signUp(data.email, data.password, data.name!);
+        //let result
+        //if (isAdmin) {
+        //  result = await signUp(data.email, data.password, data.name!, data.adminKey);
+        //} else {
+        //  result = await signUp(data.email, data.password, data.name!);
+        //}
+
+        const result = isAdmin
+          ? await signUp(data.email, data.password, data.name!, data.adminKey)
+          : await signUp(data.email, data.password, data.name!);
+
         if (!result?.user) {
-          setGlobalError("Failed to create account");
+          toast.error("Failed to create account");
         } else {
-          router.push('/');
+          toast.success("Account created successfully");
           try { router.refresh(); } catch (e) { }
         }
       }
     } catch (err) {
-      setGlobalError(
-        `Authentication error: ${err instanceof Error ? err.message : "Unknown error"
-        }`
+      toast.error(
+        `Authentication error`
       );
     }
   };
@@ -112,19 +124,7 @@ export default function AuthClientPage() {
             </p>
           </div>
 
-          {/* Error Display */}
-          {globalError && (
-            <div className={twMerge("error-container", "mb-6")}>
-              <div className="error-flex items-center">
-                <div className="error-icon-container">
-                  <AlertCircle className="error-icon" />
-                </div>
-                <div className="error-text-container">
-                  <p className="error-text">{globalError}</p>
-                </div>
-              </div>
-            </div>
-          )}
+
 
           {/* Social Authentication */}
           <div className="social-auth-container">
@@ -246,10 +246,50 @@ export default function AuthClientPage() {
               )}
             </div>
 
+            {!isSignIn && (
+              <div className="mt-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <input
+                    type="checkbox"
+                    id="isAdmin"
+                    checked={isAdmin}
+                    onChange={(e) => setIsAdmin(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="isAdmin" className="text-sm text-gray-700">
+                    I am an Admin
+                  </label>
+                </div>
+
+                {isAdmin && (
+                  <div>
+                    <label htmlFor="adminKey" className="form-label">
+                      Admin Key
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="adminKey"
+                        type="text"
+                        className={clsx(
+                          "form-input",
+                          errors.adminKey && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                        )}
+                        placeholder="Enter Admin Key"
+                        {...register("adminKey")}
+                      />
+                    </div>
+                    {errors.adminKey && (
+                      <p className="mt-1 text-sm text-red-600">{errors.adminKey.message}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={isSubmitting}
-              className="submit-btn"
+              className="submit-btn mt-4"
             >
               {isSubmitting ? (
                 <div className="spinner-container">

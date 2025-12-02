@@ -11,7 +11,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // points to the connection pool for queries
+  url      = env("DATABASE_URL")
+  // points to the connection pool for queries
 }
 
 model Product {
@@ -23,7 +24,10 @@ model Product {
   priceCents  Int
   keywords    Json?
   slug        String      @unique
-  cartItems   CartItem[] // was Cart[]
+  description String?     @db.Text
+  stock       Int         @default(0)
+  category    String?
+  cartItems   CartItem[]
   orderItems  OrderItem[]
 
   @@index([slug])
@@ -99,6 +103,11 @@ model User {
   paymentSummary PaymentSummary?
   orders         Order[]
 
+  role       String?
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
   @@unique([email])
   @@map("user")
 }
@@ -113,6 +122,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@map("session")

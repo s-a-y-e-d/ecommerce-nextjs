@@ -1,4 +1,4 @@
-import formateMoney from "../../lib/utiles/money";
+import formateMoney from "@/lib/utiles/money";
 import { PaymentSummary } from "@/app/generated/prisma";
 
 type Props = {

@@ -4,7 +4,7 @@ import formateMoney from "@/lib/utiles/money";
 import Link from "next/link";
 import { getSession } from "@/lib/utiles/auth-action";
 import { getOrdersData } from "@/lib/data";
-import { Order, OrderItem, Product } from "../generated/prisma";
+import { Order, OrderItem, Product } from "../../generated/prisma";
 import Image from "next/image";
 type OrderItemWithProduct = OrderItem & {
   product: Product

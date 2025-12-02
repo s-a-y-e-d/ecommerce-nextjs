@@ -1,5 +1,6 @@
 ﻿"use server"
 
+import { cacheTag, revalidateTag } from "next/cache";
 import prisma from "./prisma";
 import { redirect } from "next/navigation";
 
@@ -64,6 +65,7 @@ export async function searchProducts(query: string) {
 
 export async function getProductsData() {
   "use cache"
+  cacheTag('allProducts')
   return await prisma.product.findMany();
 };
 
@@ -83,6 +85,7 @@ export async function getPaymentSummeryData(userId: string) {
 
 export async function getProductBySlug(slug: string) {
   "use cache"
+  cacheTag('product')
   return prisma.product.findFirst({ where: { slug } });
 }
 
@@ -105,6 +108,6 @@ export async function getOrdersData(userId: string) {
     });
     return orders;
   } catch (e) {
-    return e;
+    throw new Error('Something went Wrong:' + (e as any).message);
   }
 }

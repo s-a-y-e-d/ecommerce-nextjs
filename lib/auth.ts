@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 import prisma from "./prisma";
 import { nextCookies } from "better-auth/next-js";
+import { admin } from "better-auth/plugins"
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -11,7 +12,7 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: false,
-      maxAge: 5 * 60, // Cache duration in seconds (5 minutes)
+      maxAge: 5 * 60,
     },
   },
   emailAndPassword: {
@@ -27,5 +28,8 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }
   },
-  plugins: [nextCookies()]
+  plugins: [
+    admin(),
+    nextCookies(),
+  ]
 });

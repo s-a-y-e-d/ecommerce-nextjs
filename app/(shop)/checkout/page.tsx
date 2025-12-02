@@ -2,7 +2,7 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
-import { CartItem, PaymentSummary, Product } from '../generated/prisma';
+import { CartItem, PaymentSummary, Product } from '../../generated/prisma';
 import ClientPage from './ClientPage';
 import './styles/CheckoutPage.css'
 import './styles/CartHeader.module.css'

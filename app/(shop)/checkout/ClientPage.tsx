@@ -1,14 +1,14 @@
 ﻿'use client'
 
 import { Suspense, useState, useEffect, useRef } from 'react'
-import CartItemCardSkeleton from '../components/ui/CartItemCardSkeleton';
+import CartItemCardSkeleton from '../../components/ui/CartItemCardSkeleton';
 import CartItemCard from './CartItemCard';
-import PaymentSummerySkeleton from '../components/ui/PaymentSummerySkeleton';
+import PaymentSummerySkeleton from '../../components/ui/PaymentSummerySkeleton';
 import PaymentSummeryCard from './PaymentSummery';
-import { CartItem, PaymentSummary, Product } from '../generated/prisma';
+import { CartItem, PaymentSummary, Product } from '../../generated/prisma';
 import { useActionState } from 'react';
 import { addToOrders } from '@/lib/utiles/actions';
-import Spinner from '../components/ui/Spinner';
+import Spinner from '../../components/ui/Spinner';
 import toast from 'react-hot-toast';
 
 type CartItemWithProduct = CartItem & {
