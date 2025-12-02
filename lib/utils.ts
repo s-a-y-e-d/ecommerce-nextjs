@@ -36,7 +36,7 @@ export function countOrdersByMonth(orders: Order[]) {
 }
 
 export function getMostOrderedProducts(orderItems: OrderItem[]) {
-  const countMap = {};
+  const countMap: Record<string, number> = {};
 
   for (const item of orderItems) {
     const id = item.productId;
@@ -46,7 +46,7 @@ export function getMostOrderedProducts(orderItems: OrderItem[]) {
 
   // convert to array for sorting
   return Object.entries(countMap)
-    .map(([productId, count]) => ({ productId, count }))
-    .sort((a, b) => b.count - a.count); // highest first
+    .map(([productId, count]) => ({ productId, count: count as number }))
+    .sort((a, b) => b.count - a.count);
 }
 
